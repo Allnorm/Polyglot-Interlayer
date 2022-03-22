@@ -42,20 +42,20 @@ class Interlayer:
         while self.oauth_token == "":
             self.oauth_token = input("Please, write your OAuth Token: ")
 
-        config.set("Polyglot", "oauth-token", self.oauth_token)
-        config.set("Polyglot", "folder-id", self.folder_id)
+        config.set("Interlayer", "oauth-token", self.oauth_token)
+        config.set("Interlayer", "folder-id", self.folder_id)
         return config
 
     def api_init(self, config):
 
         try:
-            self.oauth_token = config["Polyglot"]["oauth-token"]
-            self.folder_id = config["Polyglot"]["folder-id"]
+            self.oauth_token = config["Interlayer"]["oauth-token"]
+            self.folder_id = config["Interlayer"]["folder-id"]
         except KeyError:
             raise
 
         version = "1.0 for Yandex API (yapi)"
-        build = "1"
+        build = "2"
         version_polyglot = "1.3 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
