@@ -1,5 +1,5 @@
 # Polyglot-Interlayer
-Here are different versions of Interlayer for Polyglot
+Here are different versions of Interlayer for Polyglot (https://github.com/Allnorm/Polyglot)
 # Dependencies
 * For Google API - Python Client for Google Cloud Translation https://github.com/googleapis/python-translate, Apache-2.0 License
 * For Google Free API - Py-googletrans https://github.com/ssut/py-googletrans, MIT License
