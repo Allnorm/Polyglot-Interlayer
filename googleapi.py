@@ -43,7 +43,7 @@ class Interlayer:
     def api_init(self, config):
 
         version = "1.1 for googleapi 3.6.1"
-        build = "2"
+        build = "3"
         version_polyglot = "1.3 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
@@ -52,7 +52,8 @@ class Interlayer:
         try:
             self.json_key = config["Interlayer"]["keypath"]
         except KeyError:
-            raise
+            self.json_key = "key.json"
+            logging.warning("path for JSON file not found! Reset to default (key.json)")
 
         if not os.path.isfile(self.json_key):
             logging.error("JSON file wasn't found! Bot will close!")
