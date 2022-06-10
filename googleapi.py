@@ -37,13 +37,14 @@ class Interlayer:
         keypath = input("Please, write path to your JSON Google API Key (optional, key.json as default): ")
         if keypath == "":
             keypath = "key.json"
+        config.add_section("Interlayer")
         config.set("Interlayer", "keypath", keypath)
         return config
 
     def api_init(self, config):
 
         version = "1.1 for googleapi 3.6.1"
-        build = "3"
+        build = "4"
         version_polyglot = "1.3 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
