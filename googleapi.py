@@ -36,7 +36,7 @@ class Interlayer:
     def init_dialog_api(config):
         keypath = input("Please, write path to your JSON Google API Key (optional, key.json as default): ")
         if keypath == "":
-            keypath = "key.json"
+            keypath = "../../key.json"
         config.add_section("Interlayer")
         config.set("Interlayer", "keypath", keypath)
         return config
@@ -45,7 +45,7 @@ class Interlayer:
 
         version = "1.1 for googleapi 3.6.1"
         build = "4"
-        version_polyglot = "1.3 alpha/beta/release"
+        version_polyglot = "1.4 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
         logging.info("Compatible with version of Polyglot {}, build {}".format(version_polyglot, build_polyglot))
@@ -53,7 +53,7 @@ class Interlayer:
         try:
             self.json_key = config["Interlayer"]["keypath"]
         except KeyError:
-            self.json_key = "key.json"
+            self.json_key = "../../key.json"
             logging.warning("path for JSON file not found! Reset to default (key.json)")
 
         if not os.path.isfile(self.json_key):

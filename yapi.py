@@ -57,7 +57,7 @@ class Interlayer:
 
         version = "1.0 for Yandex API (yapi)"
         build = "4"
-        version_polyglot = "1.3 alpha/beta/release"
+        version_polyglot = "1.4 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
         logging.info("Compatible with version of Polyglot {}, build {}".format(version_polyglot, build_polyglot))
