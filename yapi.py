@@ -56,7 +56,7 @@ class Interlayer:
             raise
 
         version = "1.0 for Yandex API (yapi)"
-        build = "3"
+        build = "4"
         version_polyglot = "1.3 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
@@ -98,8 +98,6 @@ class Interlayer:
                                  json={"folderId": self.folder_id, "text": text},
                                  headers=self.headers
                                  )
-
-        print(json.loads(response.text))
 
         if json.loads(response.text).get("message") is not None:
             if "text length must be not greater than 1000" in json.loads(response.text).get("message"):
