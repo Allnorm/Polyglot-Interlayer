@@ -26,6 +26,9 @@ class Interlayer:
     class UnkTransException(Exception):
         pass
 
+    class LangDetectException(Exception):
+        pass
+
     lang_list = {}
     iam_token = ""
     folder_id = ""
@@ -55,9 +58,9 @@ class Interlayer:
         except KeyError:
             raise
 
-        version = "1.0 for Yandex API (yapi)"
-        build = "4"
-        version_polyglot = "1.4 alpha/beta/release"
+        version = "1.1 for Yandex API (yapi)"
+        build = "1"
+        version_polyglot = "1.4.2 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
         logging.info("Compatible with version of Polyglot {}, build {}".format(version_polyglot, build_polyglot))
@@ -104,10 +107,10 @@ class Interlayer:
                 raise self.TooLongMsg
             else:
                 logging.error(json.loads(response.text))
-                raise self.UnkTransException
+                raise self.LangDetectException
 
         if not json.loads(response.text):
-            return "en"
+            raise self.LangDetectException
         return json.loads(response.text).get("languageCode")
 
     def list_of_langs(self):

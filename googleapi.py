@@ -32,6 +32,9 @@ class Interlayer:
     class UnkTransException(Exception):
         pass
 
+    class LangDetectException(Exception):
+        pass
+
     @staticmethod
     def init_dialog_api(config):
         keypath = input("Please, write path to your JSON Google API Key (optional, key.json as default): ")
@@ -43,9 +46,9 @@ class Interlayer:
 
     def api_init(self, config):
 
-        version = "1.1 for googleapi 3.6.1"
+        version = "1.2 for googleapi 3.6.1"
         build = "4"
-        version_polyglot = "1.4 alpha/beta/release"
+        version_polyglot = "1.4.2 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
         logging.info("Compatible with version of Polyglot {}, build {}".format(version_polyglot, build_polyglot))
@@ -84,7 +87,7 @@ class Interlayer:
                                                    content=text, timeout=10).languages[0].language_code
         except Exception as e:
             logging.error(str(e) + "\n" + traceback.format_exc())
-            raise self.UnkTransException
+            raise self.LangDetectException
 
     def list_of_langs(self):
         lang_buffer = self.translator.get_supported_languages(parent=self.project_name,

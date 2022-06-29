@@ -30,6 +30,9 @@ class Interlayer:
     class UnkTransException(Exception):
         pass
 
+    class LangDetectException(Exception):
+        pass
+
     @staticmethod
     def init_dialog_api(config):
         return config
@@ -37,9 +40,9 @@ class Interlayer:
     @staticmethod
     def api_init(config):
 
-        version = "1.1 for py-googletrans 4.0.0rc1 (freeapi)"
+        version = "1.2 for py-googletrans 4.0.0rc1 (freeapi)"
         build = "1"
-        version_polyglot = "1.4 alpha/beta/release"
+        version_polyglot = "1.4.2 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
         logging.info("Compatible with version of Polyglot {}, build {}".format(version_polyglot, build_polyglot))
@@ -60,9 +63,10 @@ class Interlayer:
             return self.translator.detect(text).lang.lower()
         except (AttributeError, httpcore._exceptions.ReadError):
             logging.error("GOOGLE_API_REJECT (in lang extract)")
+            raise self.LangDetectException
         except Exception as e:
             logging.error(str(e) + "\n" + traceback.format_exc())
-        raise self.UnkTransException
+            raise self.LangDetectException
 
     def list_of_langs(self):
 
