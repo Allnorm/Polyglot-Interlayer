@@ -35,6 +35,9 @@ class Interlayer:
     class LangDetectException(Exception):
         pass
 
+    class UnknownLang(Exception):
+        pass
+
     @staticmethod
     def init_dialog_api(config):
         keypath = input("Please, write path to your JSON Google API Key (optional, key.json as default): ")
@@ -47,7 +50,7 @@ class Interlayer:
     def api_init(self, config):
 
         version = "1.2 for googleapi 3.6.1"
-        build = "4"
+        build = "2"
         version_polyglot = "1.4.2 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))

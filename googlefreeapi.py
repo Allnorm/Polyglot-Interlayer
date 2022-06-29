@@ -33,6 +33,9 @@ class Interlayer:
     class LangDetectException(Exception):
         pass
 
+    class UnknownLang(Exception):
+        pass
+
     @staticmethod
     def init_dialog_api(config):
         return config
@@ -41,7 +44,7 @@ class Interlayer:
     def api_init(config):
 
         version = "1.2 for py-googletrans 4.0.0rc1 (freeapi)"
-        build = "1"
+        build = "2"
         version_polyglot = "1.4.2 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))

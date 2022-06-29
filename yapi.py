@@ -29,6 +29,9 @@ class Interlayer:
     class LangDetectException(Exception):
         pass
 
+    class UnknownLang(Exception):
+        pass
+
     lang_list = {}
     iam_token = ""
     folder_id = ""
@@ -59,7 +62,7 @@ class Interlayer:
             raise
 
         version = "1.1 for Yandex API (yapi)"
-        build = "1"
+        build = "2"
         version_polyglot = "1.4.2 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
@@ -110,7 +113,7 @@ class Interlayer:
                 raise self.LangDetectException
 
         if not json.loads(response.text):
-            raise self.LangDetectException
+            raise self.UnknownLang
         return json.loads(response.text).get("languageCode")
 
     def list_of_langs(self):
