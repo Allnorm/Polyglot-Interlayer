@@ -32,12 +32,31 @@ class Interlayer:
     class UnknownLang(Exception):
         pass
 
+    class __TimeoutException(Exception):
+        pass
+
     lang_list = {}
     iam_token = ""
     folder_id = ""
     oauth_token = ""
     headers = {}
     timer = 0
+    __ATTEMPTS = 10
+
+    def __get_response(self, url, request_json):
+        for attempt in range(self.__ATTEMPTS + 1):
+
+            if attempt == self.__ATTEMPTS:
+                logging.error("Timeout exception!")
+                raise self.__TimeoutException
+
+            try:
+                return requests.post(url, json=request_json, headers=self.headers, timeout=10)
+            except requests.exceptions.Timeout:
+                pass
+            except Exception as e:
+                logging.error(str(e) + "\n" + traceback.format_exc())
+                raise self.__TimeoutException
 
     def init_dialog_api(self, config):
 
@@ -61,8 +80,8 @@ class Interlayer:
         except KeyError:
             raise
 
-        version = "1.1 for Yandex API (yapi)"
-        build = "2"
+        version = "1.2 for Yandex API (yapi)"
+        build = "1"
         version_polyglot = "1.4.2 alpha/beta/release"
         build_polyglot = "- any"
         logging.info("Interlayer version {}, build {}".format(version, build))
@@ -71,23 +90,21 @@ class Interlayer:
         return config
 
     def translate_init(self):
+
         try:
-            response = requests.post('https://iam.api.cloud.yandex.net/iam/v1/tokens',
-                                     json={"yandexPassportOauthToken": self.oauth_token}
-                                     )
-
-            if json.loads(response.text).get("message") is not None:
-                logging.error("IAmToken wasn't updated successful! Bot will close!")
-                logging.error(json.loads(response.text))
-                sys.exit(1)
-
-            self.iam_token = json.loads(response.text).get("iamToken")
-            logging.info("IAmToken updated successfully")
-        except Exception as e:
-            logging.error("IAmToken wasn't updated successful! Bot will close! "
-                          "Please check your Internet connection.")
-            logging.error(str(e) + "\n" + traceback.format_exc())
+            response = self.__get_response('https://iam.api.cloud.yandex.net/iam/v1/tokens',
+                                           {"yandexPassportOauthToken": self.oauth_token})
+        except self.__TimeoutException:
+            logging.error("IAmToken wasn't updated successful! Bot will close!")
             sys.exit(1)
+
+        if json.loads(response.text).get("message") is not None:
+            logging.error("IAmToken wasn't updated successful! Bot will close!")
+            logging.error(json.loads(response.text))
+            sys.exit(1)
+
+        self.iam_token = json.loads(response.text).get("iamToken")
+        logging.info("IAmToken updated successfully")
 
         self.headers = {
             "Content-Type": "application/json",
@@ -100,10 +117,12 @@ class Interlayer:
         if int(time.time()) - self.timer > 3600:
             self.translate_init()
 
-        response = requests.post('https://translate.api.cloud.yandex.net/translate/v2/detect',
-                                 json={"folderId": self.folder_id, "text": text},
-                                 headers=self.headers
-                                 )
+        try:
+            response = self.__get_response('https://translate.api.cloud.yandex.net/translate/v2/detect',
+                                           {"folderId": self.folder_id, "text": text})
+        except self.__TimeoutException:
+            logging.error("Lang detect error!")
+            raise self.LangDetectException
 
         if json.loads(response.text).get("message") is not None:
             if "text length must be not greater than 1000" in json.loads(response.text).get("message"):
@@ -121,10 +140,13 @@ class Interlayer:
         if int(time.time()) - self.timer > 3600:
             self.translate_init()
 
-        response = requests.post('https://translate.api.cloud.yandex.net/translate/v2/languages',
-                                 json={"folderId": self.folder_id},
-                                 headers=self.headers
-                                 )
+        try:
+            response = self.__get_response('https://translate.api.cloud.yandex.net/translate/v2/languages',
+                                           {"folderId": self.folder_id})
+        except self.__TimeoutException:
+            logging.error("langlist update failed! Bot will close!")
+            sys.exit(1)
+
         if json.loads(response.text).get("message") is not None:
             logging.error("langlist update failed! Bot will close!")
             logging.error(json.loads(response.text))
@@ -150,8 +172,11 @@ class Interlayer:
         if src_lang is not None:
             body.update({"sourceLanguageCode": src_lang})
 
-        response = requests.post('https://translate.api.cloud.yandex.net/translate/v2/translate',
-                                 json=body, headers=self.headers)
+        try:
+            response = self.__get_response('https://translate.api.cloud.yandex.net/translate/v2/translate', body)
+        except self.__TimeoutException:
+            logging.error("unknown translation error!")
+            raise self.UnkTransException
 
         if json.loads(response.text).get("message") is not None:
             if "unsupported target_language_code" in json.loads(response.text).get("message"):
