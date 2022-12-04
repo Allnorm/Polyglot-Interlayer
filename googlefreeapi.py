@@ -43,12 +43,11 @@ class Interlayer:
     @staticmethod
     def api_init(config):
 
-        version = "1.2 for py-googletrans 4.0.0rc1 (freeapi)"
-        build = "2"
-        version_polyglot = "1.4.2 alpha/beta/release"
-        build_polyglot = "- any"
-        logging.info("Interlayer version {}, build {}".format(version, build))
-        logging.info("Compatible with version of Polyglot {}, build {}".format(version_polyglot, build_polyglot))
+        version = "1.3 for py-googletrans 4.0.0rc1 (freeapi)"
+        build_date = "04.12.2022"
+        version_polyglot = "1.4.4"
+        logging.info("Interlayer version {} build date {}".format(version, build_date))
+        logging.info("Compatible with version of Polyglot {}".format(version_polyglot))
 
         return config
 

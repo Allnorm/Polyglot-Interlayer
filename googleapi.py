@@ -42,24 +42,23 @@ class Interlayer:
     def init_dialog_api(config):
         keypath = input("Please, write path to your JSON Google API Key (optional, key.json as default): ")
         if keypath == "":
-            keypath = "../../key.json"
+            keypath = "../key.json"
         config.add_section("Interlayer")
         config.set("Interlayer", "keypath", keypath)
         return config
 
     def api_init(self, config):
 
-        version = "1.2 for googleapi 3.6.1"
-        build = "2"
-        version_polyglot = "1.4.2 alpha/beta/release"
-        build_polyglot = "- any"
-        logging.info("Interlayer version {}, build {}".format(version, build))
-        logging.info("Compatible with version of Polyglot {}, build {}".format(version_polyglot, build_polyglot))
+        version = "1.3 for googleapi 3.8.4"
+        build_date = "04.12.2022"
+        version_polyglot = "1.4.4"
+        logging.info("Interlayer version {} build date {}".format(version, build_date))
+        logging.info("Compatible with version of Polyglot {}".format(version_polyglot))
 
         try:
             self.json_key = config["Interlayer"]["keypath"]
         except KeyError:
-            self.json_key = "../../key.json"
+            self.json_key = "../key.json"
             logging.warning("path for JSON file not found! Reset to default (key.json)")
 
         if not os.path.isfile(self.json_key):
@@ -93,8 +92,14 @@ class Interlayer:
             raise self.LangDetectException
 
     def list_of_langs(self):
-        lang_buffer = self.translator.get_supported_languages(parent=self.project_name,
+        try:
+            lang_buffer = self.translator.get_supported_languages(parent=self.project_name,
                                                               display_language_code="en", timeout=10)
+        except Exception as e:
+            logging.error(str(e) + "\n" + traceback.format_exc())
+            logging.error("Fatal error of creating language list! Bot will be closed!")
+            sys.exit(1)
+
         for lang in lang_buffer.languages:
             self.lang_list.update({lang.language_code: lang.display_name})
 
