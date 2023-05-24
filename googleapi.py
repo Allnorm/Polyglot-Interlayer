@@ -49,8 +49,8 @@ class Interlayer:
 
     def api_init(self, config):
 
-        version = "1.3 for googleapi 3.8.4"
-        build_date = "04.12.2022"
+        version = "1.3.1 for googleapi 3.8.4"
+        build_date = "24.05.2022"
         version_polyglot = "1.4.4"
         logging.info("Interlayer version {} build date {}".format(version, build_date))
         logging.info("Compatible with version of Polyglot {}".format(version_polyglot))
@@ -114,9 +114,13 @@ class Interlayer:
         except Exception as e:
             if "400 Target language is invalid." in str(e):
                 raise self.BadTrgLangException
-            if "400 Target language can't be equal to source language." in str(e):
+            elif "400 Target language is unsupported." in str(e):
+                raise self.BadTrgLangException
+            elif "400 Target language can't be equal to source language." in str(e):
                 raise self.EqualLangsException
-            if "400 Source language is invalid." in str(e):
+            elif "400 Source language is unsupported." in str(e):
+                raise self.BadSrcLangException
+            elif "400 Source language is invalid." in str(e):
                 raise self.BadSrcLangException
             else:
                 logging.error(str(e) + "\n" + traceback.format_exc())
