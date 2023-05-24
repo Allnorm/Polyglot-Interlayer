@@ -50,7 +50,7 @@ class Interlayer:
     def api_init(self, config):
 
         version = "1.3.1 for googleapi 3.8.4"
-        build_date = "24.05.2022"
+        build_date = "24.05.2023"
         version_polyglot = "1.4.4"
         logging.info("Interlayer version {} build date {}".format(version, build_date))
         logging.info("Compatible with version of Polyglot {}".format(version_polyglot))
